@@ -33,6 +33,7 @@ type
     procedure Button3Click(Sender: TObject);
   private
     { Déclarations privées }
+    procedure OnLoop(Sender: TObject; var Done: Boolean);
   public
     { Déclarations publiques }
   end;
@@ -54,6 +55,8 @@ implementation
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   PythonEngine1.ExecStrings( Memo1.Lines );
+  Application.OnIdle := OnLoop;
+
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -72,6 +75,16 @@ begin
       if Execute then
         Memo1.Lines.SaveToFile( FileName );
     end;
+end;
+
+procedure TForm1.OnLoop(Sender: TObject; var Done: Boolean);
+var
+  s : TStringList;
+begin
+  s := TStringList.Create;
+  s.Add('client.loop()');
+  PythonEngine1.ExecStrings(s);
+  s.Free;
 end;
 
 end.
